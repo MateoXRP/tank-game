@@ -1,3 +1,4 @@
+// Shop.jsx
 import React from "react";
 
 export default function Shop({ playerTanks, gold, buyUpgrade, hasUpgrade, startBattle }) {
@@ -6,24 +7,23 @@ export default function Shop({ playerTanks, gold, buyUpgrade, hasUpgrade, startB
       <h2 className="text-xl mb-2">💰 Upgrade Shop</h2>
       {playerTanks.map(tank => (
         <div key={tank.id} className="p-4 bg-gray-800 rounded-lg shadow">
+          <img
+            src={`/images/tank${tank.id}.png`}
+            alt={`Tank ${tank.id}`}
+            className="w-20 h-20 object-contain mx-auto mb-2"
+          />
           <p className="mb-2 font-semibold">Tank {tank.id}</p>
           <p className="text-sm mb-1">HP: {tank.hp} | ATK: {tank.atk} | DEF: {tank.def}</p>
           <div className="flex justify-center gap-4 my-2">
             <div className="flex items-center gap-1">
               {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-3 h-3 rounded-sm ${i < hasUpgrade(tank, "atk") ? "bg-yellow-400" : "bg-gray-600"}`}
-                ></div>
+                <div key={i} className={`w-3 h-3 rounded-sm ${i < hasUpgrade(tank, "atk") ? "bg-yellow-400" : "bg-gray-600"}`}></div>
               ))}
               <span className="text-xs text-blue-300 ml-1">ATK</span>
             </div>
             <div className="flex items-center gap-1">
               {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-3 h-3 rounded-sm ${i < hasUpgrade(tank, "def") ? "bg-yellow-400" : "bg-gray-600"}`}
-                ></div>
+                <div key={i} className={`w-3 h-3 rounded-sm ${i < hasUpgrade(tank, "def") ? "bg-yellow-400" : "bg-gray-600"}`}></div>
               ))}
               <span className="text-xs text-green-300 ml-1">DEF</span>
             </div>
