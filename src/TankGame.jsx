@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import Shop from "./components/Shop";
+import Battle from "./components/Battle";
+import GameOver from "./components/GameOver";
 
 export default function TankGame() {
   const [level, setLevel] = useState(1);
@@ -199,136 +202,28 @@ export default function TankGame() {
       <p className="mb-2">Gold: {gold}</p>
 
       {mode === "shop" && (
-        <div className="text-center max-w-md w-full space-y-4">
-          <h2 className="text-xl mb-2">💰 Upgrade Shop</h2>
-          {playerTanks.map(tank => (
-            <div key={tank.id} className="p-4 bg-gray-800 rounded-lg shadow">
-              <p className="mb-2 font-semibold">Tank {tank.id}</p>
-              <p className="text-sm mb-1">HP: {tank.hp} | ATK: {tank.atk} | DEF: {tank.def}</p>
-              <div className="flex justify-center gap-4 my-2">
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <div key={i} className={`w-3 h-3 rounded-sm ${i < hasUpgrade(tank, "atk") ? "bg-yellow-400" : "bg-gray-600"}`}></div>
-                  ))}
-                  <span className="text-xs text-blue-300 ml-1">ATK</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <div key={i} className={`w-3 h-3 rounded-sm ${i < hasUpgrade(tank, "def") ? "bg-yellow-400" : "bg-gray-600"}`}></div>
-                  ))}
-                  <span className="text-xs text-green-300 ml-1">DEF</span>
-                </div>
-              </div>
-              <div className="flex justify-center space-x-2">
-                <button
-                  disabled={hasUpgrade(tank, "atk") >= 5 || gold < 20}
-                  className={`px-3 py-1 rounded text-sm transition ${
-                    hasUpgrade(tank, "atk") >= 5 ? "opacity-50 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-                  }`}
-                  onClick={() => buyUpgrade(tank.id, "atk")}
-                >
-                  +5 ATK (20g)
-                </button>
-                <button
-                  disabled={hasUpgrade(tank, "def") >= 5 || gold < 20}
-                  className={`px-3 py-1 rounded text-sm transition ${
-                    hasUpgrade(tank, "def") >= 5 ? "opacity-50 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
-                  }`}
-                  onClick={() => buyUpgrade(tank.id, "def")}
-                >
-                  +5 DEF (20g)
-                </button>
-              </div>
-            </div>
-          ))}
-          <button
-            className="mt-4 bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded font-bold"
-            onClick={startBattle}
-          >
-            Start Battle
-          </button>
-        </div>
+        <Shop
+          playerTanks={playerTanks}
+          gold={gold}
+          buyUpgrade={buyUpgrade}
+          hasUpgrade={hasUpgrade}
+          startBattle={startBattle}
+        />
       )}
 
       {mode === "battle" && (
-        <div className="w-full max-w-md">
-          <h2 className="text-xl mb-4 text-center">⚔️ Battle</h2>
-          <div className="flex justify-between mb-6">
-            <div className="flex flex-col items-center space-y-2">
-              {playerTanks.map(t => (
-                <div key={t.id} className="text-center">
-                  <div className="text-4xl">●</div>
-                  <p>Tank {t.id}</p>
-                  <p className="text-xs">ATK: {t.atk} | DEF: {t.def} | CD: {t.cooldown}</p>
-                  <div className="w-24 bg-gray-700 rounded-full h-2 mt-1">
-                    <div className="bg-green-500 h-2 rounded-full" style={{ width: `${t.hp}%` }}></div>
-                  </div>
-                  <p className="text-sm">HP: {t.hp}</p>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col items-center space-y-2">
-              {enemyTanks.map(e => (
-                <div key={e.id} className="text-center">
-                  <div className="text-4xl">●</div>
-                  <p>Enemy {e.id}</p>
-                  <p className="text-xs">ATK: {e.atk.toFixed(1)} | DEF: {e.def}</p>
-                  <div className="w-24 bg-gray-700 rounded-full h-2 mt-1">
-                    <div className="bg-red-500 h-2 rounded-full" style={{ width: `${e.hp}%` }}></div>
-                  </div>
-                  <p className="text-sm">HP: {e.hp}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {isPlayerTurn ? (
-            playerTanks[turnIndex]?.hp > 0 ? (
-              <div className="text-center mb-4">
-                <p className="mb-2">🎯 Tank {playerTanks[turnIndex].id}'s turn</p>
-                <div className="mb-2">
-                  <p className="mb-1">Target Enemy {enemyTanks[0].id}</p>
-                  <div className="flex justify-center space-x-2">
-                    <button
-                      disabled={playerTanks[turnIndex].cooldown > 0}
-                      onClick={() => handlePlayerAttack(0, "cannon")}
-                      className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm disabled:opacity-50"
-                    >
-                      💥 Cannon
-                    </button>
-                    <button
-                      onClick={() => handlePlayerAttack(0, "machinegun")}
-                      className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 rounded text-sm"
-                    >
-                      🔫 Machine Gun
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <p className="text-center">⛔ Tank {playerTanks[turnIndex].id} is destroyed</p>
-            )
-          ) : (
-            <p className="text-center">⏳ Enemy Turn...</p>
-          )}
-
-          <div className="bg-gray-800 p-4 rounded mt-4 max-h-60 overflow-y-auto text-sm">
-            {log.map((entry, i) => <p key={i}>{entry}</p>)}
-          </div>
-        </div>
+        <Battle
+          playerTanks={playerTanks}
+          enemyTanks={enemyTanks}
+          turnIndex={turnIndex}
+          isPlayerTurn={isPlayerTurn}
+          handlePlayerAttack={handlePlayerAttack}
+          log={log}
+        />
       )}
 
       {mode === "gameover" && (
-        <div className="text-center">
-          <h2 className="text-xl text-red-500 mb-2">Game Over</h2>
-          <p className="mb-4">You reached Level {level}, Encounter {encounter}</p>
-          <button
-            onClick={resetGame}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
-          >
-            🔄 Restart Game
-          </button>
-        </div>
+        <GameOver level={level} encounter={encounter} onRestart={resetGame} />
       )}
     </div>
   );
