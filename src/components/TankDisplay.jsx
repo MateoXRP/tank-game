@@ -26,10 +26,11 @@ export default function TankDisplay({
         className="w-24 h-24 object-contain mx-auto mb-1"
       />
       <p className={textColor}>
-        {isEnemy
-          ? `Enemy ${tank.id}${tank.type === "light" ? " (LT)" : ""}`
-          : `Tank ${tank.id}`}
-      </p>
+ 	 {isEnemy
+   		 ? `Enemy ${tank.id}${tank.type === "light" ? " (LT)" : ""}`
+   		 : `Tank ${tank.id} (Lvl ${tank.level || 1})`}
+	</p>
+
       <p className="text-xs">
         ATK: {tank.atk} | DEF: {tank.def}
         {showCooldown ? ` | CD: ${tank.cooldown}` : ""}
@@ -44,4 +45,3 @@ export default function TankDisplay({
     </div>
   );
 }
-

@@ -25,7 +25,9 @@ export default function Shop({ playerTanks, gold, buyUpgrade, hasUpgrade, startB
             alt={`Tank ${tank.id}`}
             className="w-20 h-20 object-contain mx-auto mb-2"
           />
-          <p className="mb-1 font-semibold">Tank {tank.id}</p>
+          <p className="mb-1 font-semibold">
+            Tank {tank.id} <span className="text-yellow-400 text-sm">(Lvl {tank.level || 1})</span>
+          </p>
           <p className="text-sm mb-1">HP: {tank.hp} | ATK: {tank.atk} | DEF: {tank.def}</p>
           {isFullyUpgraded(tank) && (
             <p className="text-green-400 text-sm mb-2">🧨 Missile Ready</p>
