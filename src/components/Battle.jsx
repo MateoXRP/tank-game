@@ -32,7 +32,7 @@ export default function Battle({
             <p className="mb-2">🎯 Tank {playerTanks[turnIndex].id}'s turn</p>
             <div className="mb-2">
               <p className="mb-1">Target Enemy {enemyTanks[0].id}</p>
-              <div className="flex justify-center space-x-2">
+              <div className="flex flex-wrap justify-center gap-2">
                 <button
                   disabled={playerTanks[turnIndex].cooldown > 0}
                   onClick={() => handlePlayerAttack(0, "cannon")}
