@@ -122,8 +122,33 @@ export default function TankGame() {
     if (weaponType === "missile") multiplier = 3;
 
     const updatedEnemies = [...enemyTanks];
-    updatedEnemies[enemyIndex] = attack(attacker, updatedEnemies[enemyIndex], multiplier);
+    const targetBefore = updatedEnemies[enemyIndex];
+    const targetAfter = attack(attacker, targetBefore, multiplier);
+    updatedEnemies[enemyIndex] = targetAfter;
     setEnemyTanks(updatedEnemies);
+    
+    if (targetBefore.hp > 0 && targetAfter.hp <= 0) {
+  const updatedPlayers = [...playerTanks];
+  const tank = updatedPlayers[turnIndex];
+  tank.kills = (tank.kills || 0) + 1;
+
+  const levelThresholds = [1, 3, 7, 15];
+  const currentLevel = tank.level || 1;
+  const threshold = levelThresholds[currentLevel - 1];
+
+  if (currentLevel < 5 && tank.kills >= threshold) {
+    tank.level = currentLevel + 1;
+    tank.atk += 3;
+    tank.def += 2;
+    console.log(`[DEBUG] Tank ${tank.id} leveled up to ${tank.level}! New atk: ${tank.atk}, def: ${tank.def}`);
+  } else {
+    console.log(`[DEBUG] Tank ${tank.id} scored a kill! Total kills: ${tank.kills}`);
+  }
+
+  setPlayerTanks(updatedPlayers);
+}
+
+    
 
     const updatedPlayers = [...playerTanks];
     if (weaponType === "cannon") updatedPlayers[turnIndex].cooldown = 2;
@@ -262,4 +287,3 @@ export default function TankGame() {
     </div>
   );
 }
-
