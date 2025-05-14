@@ -7,8 +7,8 @@ export default function TankGame() {
   const [level, setLevel] = useState(1);
   const [encounter, setEncounter] = useState(1);
   const [playerTanks, setPlayerTanks] = useState([
-    { id: 1, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0 },
-    { id: 2, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0 }
+    { id: 1, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false },
+    { id: 2, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false }
   ]);
   const [enemyTanks, setEnemyTanks] = useState([]);
   const [mode, setMode] = useState("shop");
@@ -40,8 +40,8 @@ export default function TankGame() {
     setLevel(1);
     setEncounter(1);
     setPlayerTanks([
-      { id: 1, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0 },
-      { id: 2, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0 }
+      { id: 1, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false },
+      { id: 2, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false }
     ]);
     setGold(50);
     setEnemyTanks([]);
@@ -63,6 +63,10 @@ export default function TankGame() {
 
   function hasUpgrade(tank, stat) {
     return tank.upgrades.filter(s => s === stat).length;
+  }
+
+  function isFullyUpgraded(tank) {
+    return hasUpgrade(tank, "atk") === 5 && hasUpgrade(tank, "def") === 5;
   }
 
   function startBattle() {
@@ -97,8 +101,12 @@ export default function TankGame() {
 
     const attacker = playerTanks[turnIndex];
     if (weaponType === "cannon" && attacker.cooldown > 0) return;
+    if (weaponType === "missile" && attacker.missileUsed) return;
 
-    const multiplier = weaponType === "cannon" ? 1.5 : 1;
+    let multiplier = 1;
+    if (weaponType === "cannon") multiplier = 1.5;
+    if (weaponType === "missile") multiplier = 3;
+
     const target = enemyTanks[enemyIndex];
     if (!target || target.hp <= 0) return;
 
@@ -108,6 +116,7 @@ export default function TankGame() {
 
     const updatedPlayers = [...playerTanks];
     if (weaponType === "cannon") updatedPlayers[turnIndex].cooldown = 2;
+    if (weaponType === "missile") updatedPlayers[turnIndex].missileUsed = true;
     setPlayerTanks(updatedPlayers);
 
     setLog(prev => [
@@ -146,7 +155,8 @@ export default function TankGame() {
     return tanks.map(t => ({
       ...t,
       hp: Math.min(t.hp + 30, 100),
-      cooldown: 0
+      cooldown: 0,
+      missileUsed: false
     }));
   }
 
@@ -219,6 +229,7 @@ export default function TankGame() {
           isPlayerTurn={isPlayerTurn}
           handlePlayerAttack={handlePlayerAttack}
           log={log}
+          isFullyUpgraded={isFullyUpgraded}
         />
       )}
 

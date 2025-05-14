@@ -7,7 +7,8 @@ export default function Battle({
   turnIndex,
   isPlayerTurn,
   handlePlayerAttack,
-  log
+  log,
+  isFullyUpgraded
 }) {
   return (
     <div className="w-full max-w-md">
@@ -45,6 +46,15 @@ export default function Battle({
                 >
                   🔫 Machine Gun
                 </button>
+                {isFullyUpgraded(playerTanks[turnIndex]) &&
+                  !playerTanks[turnIndex].missileUsed && (
+                    <button
+                      onClick={() => handlePlayerAttack(0, "missile")}
+                      className="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm"
+                    >
+                      🚀 Missile
+                    </button>
+                  )}
               </div>
             </div>
           </div>
