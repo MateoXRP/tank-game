@@ -25,6 +25,20 @@ export default function TankGame() {
     }
   }, [mode, isPlayerTurn, enemyTanks]);
 
+  useEffect(() => {
+    function onRepair(e) {
+      const tankId = e.detail;
+      setGold(g => g - 10);
+      setPlayerTanks(prev =>
+        prev.map(t =>
+          t.id === tankId ? { ...t, hp: Math.min(t.hp + 20, 100) } : t
+        )
+      );
+    }
+    window.addEventListener("repair-tank", onRepair);
+    return () => window.removeEventListener("repair-tank", onRepair);
+  }, []);
+
   function generateEnemies() {
     const difficulty = Math.pow(encounter + level * 2, 1.3);
     const count = Math.random() < 0.5 ? 1 : 2;
