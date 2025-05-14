@@ -8,7 +8,9 @@ export default function Battle({
   isPlayerTurn,
   handlePlayerAttack,
   log,
-  isFullyUpgraded
+  isFullyUpgraded,
+  selectedEnemyIndex,
+  setSelectedEnemyIndex
 }) {
   return (
     <div className="w-full max-w-md">
@@ -30,32 +32,47 @@ export default function Battle({
         playerTanks[turnIndex]?.hp > 0 ? (
           <div className="text-center mb-4">
             <p className="mb-2">🎯 Tank {playerTanks[turnIndex].id}'s turn</p>
-            <div className="mb-2">
-              <p className="mb-1">Target Enemy {enemyTanks[0].id}</p>
-              <div className="flex flex-wrap justify-center gap-2">
-                <button
-                  disabled={playerTanks[turnIndex].cooldown > 0}
-                  onClick={() => handlePlayerAttack(0, "cannon")}
-                  className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm disabled:opacity-50"
-                >
-                  💥 Cannon
-                </button>
-                <button
-                  onClick={() => handlePlayerAttack(0, "machinegun")}
-                  className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 rounded text-sm"
-                >
-                  🔫 Machine Gun
-                </button>
-                {isFullyUpgraded(playerTanks[turnIndex]) &&
-                  !playerTanks[turnIndex].missileUsed && (
-                    <button
-                      onClick={() => handlePlayerAttack(0, "missile")}
-                      className="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm"
-                    >
-                      🚀 Missile
-                    </button>
-                  )}
-              </div>
+
+            <p className="mb-1">Target:</p>
+            <div className="flex justify-center gap-2 mb-3">
+              {enemyTanks.map((enemy, i) =>
+                enemy.hp > 0 ? (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedEnemyIndex(i)}
+                    className={`px-2 py-1 rounded text-sm ${
+                      selectedEnemyIndex === i ? "bg-red-500" : "bg-gray-600"
+                    }`}
+                  >
+                    Enemy {enemy.id}
+                  </button>
+                ) : null
+              )}
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-2">
+              <button
+                disabled={playerTanks[turnIndex].cooldown > 0}
+                onClick={() => handlePlayerAttack(selectedEnemyIndex, "cannon")}
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm disabled:opacity-50"
+              >
+                💥 Cannon
+              </button>
+              <button
+                onClick={() => handlePlayerAttack(selectedEnemyIndex, "machinegun")}
+                className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 rounded text-sm"
+              >
+                🔫 Machine Gun
+              </button>
+              {isFullyUpgraded(playerTanks[turnIndex]) &&
+                !playerTanks[turnIndex].missileUsed && (
+                  <button
+                    onClick={() => handlePlayerAttack(selectedEnemyIndex, "missile")}
+                    className="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm"
+                  >
+                    🚀 Missile
+                  </button>
+                )}
             </div>
           </div>
         ) : (
