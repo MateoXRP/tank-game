@@ -1,6 +1,12 @@
 import React from "react";
 
-export default function TankDisplay({ tank, isEnemy = false, showCooldown = false }) {
+export default function TankDisplay({
+  tank,
+  isEnemy = false,
+  showCooldown = false,
+  isAttacking = false,
+  isDamaged = false
+}) {
   const barColor = isEnemy ? "bg-red-500" : "bg-green-500";
   const textColor = isEnemy ? "text-red-300" : "text-green-300";
 
@@ -9,14 +15,20 @@ export default function TankDisplay({ tank, isEnemy = false, showCooldown = fals
     : `/images/tank${tank.id}.png`;
 
   return (
-    <div className="text-center">
+    <div
+      className={`text-center transition-transform duration-300 ${
+        isAttacking ? "tank-shooting" : ""
+      } ${isDamaged ? "tank-damaged" : ""}`}
+    >
       <img
         src={imageSrc}
         alt={isEnemy ? "Enemy Tank" : `Tank ${tank.id}`}
         className="w-24 h-24 object-contain mx-auto mb-1"
       />
       <p className={textColor}>
-        {isEnemy ? `Enemy ${tank.id}` : `Tank ${tank.id}`}
+        {isEnemy
+          ? `Enemy ${tank.id}${tank.type === "light" ? " (LT)" : ""}`
+          : `Tank ${tank.id}`}
       </p>
       <p className="text-xs">
         ATK: {tank.atk} | DEF: {tank.def}

@@ -2,3 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes shake {
+  0% { transform: translate(0px, 0px); }
+  25% { transform: translate(2px, -2px); }
+  50% { transform: translate(-2px, 2px); }
+  75% { transform: translate(-2px, -2px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+.tank-shooting {
+  animation: shake 0.3s ease-in-out;
+}
+
+.tank-damaged {
+  animation: shake 0.4s ease-in-out;
+  box-shadow: 0 0 12px 4px rgba(255, 0, 0, 0.7);
+}
+

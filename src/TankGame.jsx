@@ -7,8 +7,8 @@ export default function TankGame() {
   const [level, setLevel] = useState(1);
   const [encounter, setEncounter] = useState(1);
   const [playerTanks, setPlayerTanks] = useState([
-    { id: 1, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false },
-    { id: 2, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false }
+    { id: 1, uid: "p1", hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false },
+    { id: 2, uid: "p2", hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false }
   ]);
   const [enemyTanks, setEnemyTanks] = useState([]);
   const [mode, setMode] = useState("shop");
@@ -48,6 +48,7 @@ export default function TankGame() {
       const isLight = Math.random() < 0.5;
       enemies.push({
         id: i + 1,
+        uid: `e${i + 1}`,
         type: isLight ? "light" : "med",
         hp: isLight ? Math.floor((65 + difficulty * 7) * 0.5) : Math.floor(65 + difficulty * 7),
         atk: isLight ? Math.floor((11 + difficulty * 1.2) * 0.5) : Math.floor(11 + difficulty * 1.2),
@@ -62,8 +63,8 @@ export default function TankGame() {
     setLevel(1);
     setEncounter(1);
     setPlayerTanks([
-      { id: 1, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false },
-      { id: 2, hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false }
+      { id: 1, uid: "p1", hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false },
+      { id: 2, uid: "p2", hp: 100, atk: 10, def: 5, upgrades: [], cooldown: 0, missileUsed: false }
     ]);
     setGold(50);
     setEnemyTanks([]);
@@ -99,7 +100,7 @@ export default function TankGame() {
     setLog([`Level ${level} - Encounter ${encounter}: Battle begins!`]);
     const firstAliveIndex = playerTanks.findIndex(t => t.hp > 0);
     setTurnIndex(firstAliveIndex === -1 ? 0 : firstAliveIndex);
-    setIsPlayerTurn(false);
+    setIsPlayerTurn(true);
     setSelectedEnemyIndex(0);
   }
 
