@@ -207,7 +207,7 @@ export default function TankGame() {
 
   return (
     <div className="p-4 text-white bg-black min-h-screen flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-4">🛡️ Tank Game</h1>
+      <h1 className="text-3xl font-bold mb-4">🪖 Tank Game</h1>
       <p className="mb-2">Level {level} – Encounter {encounter}</p>
       <p className="mb-2">Gold: {gold}</p>
 
